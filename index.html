@@ -12,11 +12,23 @@
         <input type="submit" value="отправить">
     </form>
     <div>
-        <button onclick="loadData()">Get</button>
+        <button onclick="loadData()">Get</button><br/>
+        <span id="data"></span>
     </div>
-    <span id="data"></span>
+    <input id="deleteInpt" >
+    <button onclick="deleteData()">Delete</button>
     <script>
         let spanEl = document.querySelector('#data');
+        let deleteInpt = document.querySelector('#deleteInpt');
+        function deleteData(){
+            var xhr = new XMLHttpRequest();
+            xhr.open('DELETE', 'http://192.168.88.59:8000/delete/'+deleteInpt.value, true);
+            xhr.send()
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState != 4) return;
+                console.log(xhr.status + ': ' + xhr.statusText);
+            }
+        }
         function loadData() {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', 'http://192.168.88.59:8000/items', true);
@@ -31,10 +43,9 @@
                     spanEl.innerHTML = xhr.responseText;
                     
                 }
-                spanEl.innerHTML = 'загрузка'
 
             }
-}
+        }
     </script>
 </body>
 </html>

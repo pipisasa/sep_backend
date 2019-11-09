@@ -6,8 +6,13 @@ module.exports = function(app, db){
             if (err) { 
                 res.send({ 'error': 'An error has occurred' }); 
             } else {
-                res.status(200);
-                res.send('OK')
+                db.collection('orders').find({}).toArray((err,data)=>{
+                    if(err){
+                        res.send({ 'error': 'An error has occurred' }); 
+                    } else {
+                        res.send(JSON.stringify(data))
+                    }
+                })
             }
         });
     });

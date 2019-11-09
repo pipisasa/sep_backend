@@ -42,18 +42,12 @@ module.exports = function(app, db) {
 
     //--------NEW ITEM------------//____json_____
     app.post('/newItem', (req, res) => {
-        const item = {
-            name: req.body.name,
-            description: req.body.description,
-            price: req.body.price,
-            category: req.body.category,
-            categoryName: req.body.categoryName
-        };
-        db.collection('items').insertOne(item, (err, result) => {
+        db.collection('items').insertOne(req.body, (err, result) => {
             if (err) { 
                 res.send({ 'error': 'An error has occurred' }); 
             } else {
-                res.send(result.ops[0]);
+                res.status(200);
+                res.send('OK')
             }
         });
     });
@@ -77,13 +71,7 @@ module.exports = function(app, db) {
     app.put ('/edit/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };
-        const item = { 
-            name: req.body.name,
-            description: req.body.description,
-            prise: req.body.prise,
-            category: req.body.category 
-        };
-        db.collection('items').update(details, item, (err, result) => {
+        db.collection('items').update(details, req.body, (err, result) => {
             if (err) {
                 res.send({'error':'An error has occurred'});
             } else {

@@ -1,4 +1,5 @@
-let ObjectID = require('mongodb').ObjectID
+let ObjectID = require('mongodb').ObjectID;
+
 module.exports = function(app, db) {
     
     //-------------GET-ALL-ITEM---------//
@@ -12,17 +13,23 @@ module.exports = function(app, db) {
         })
     })
 
-    //------------FIND-NAME-OR-CATEGORY-------------//
-    app.get('/find/', async (req, res)=>{
+    //------------FIND-NAME-------------//
+    app.get('/find/name', async (req, res)=>{
         const name = req.query.name;
+        const details = { name: name};
+        db.collection('items').find(details).toArray((err,data) => {
+            if (err) { 
+                res.send({ 'error': 'An error has occurred' }); 
+            } else {
+                res.send(JSON.stringify(data))
+            }
+        })
+    })
+    
+    //------------FIND-CATEGORY-------------//
+    app.get('/find/category', async (req, res)=>{
         const category = req.query.category;
-        if(name){
-            const details = { name: name};
-        }else if(category){
-            const details = { category: category };
-        }else{
-            res.send({'err':'An error has occured'})
-        }
+        const details = { category: category };
         db.collection('items').find(details).toArray((err,data) => {
             if (err) { 
                 res.send({ 'error': 'An error has occurred' }); 
@@ -33,13 +40,14 @@ module.exports = function(app, db) {
     })
 
 
-    //--------NEW ITEM------------//____x-www-form-urlencoded_____
+    //--------NEW ITEM------------//____json_____
     app.post('/newItem', (req, res) => {
-        const item = { 
+        const item = {
             name: req.body.name,
             description: req.body.description,
-            prise: req.body.prise,
-            category: req.body.category 
+            price: req.body.price,
+            category: req.body.category,
+            categoryName: req.body.categoryName
         };
         db.collection('items').insertOne(item, (err, result) => {
             if (err) { 
@@ -65,7 +73,7 @@ module.exports = function(app, db) {
     });
 
 
-    //------------EDIT-ID--------------//____x-www-form-urlencoded_____
+    //------------EDIT-ID--------------//____json_____
     app.put ('/edit/:id', (req, res) => {
         const id = req.params.id;
         const details = { '_id': new ObjectID(id) };

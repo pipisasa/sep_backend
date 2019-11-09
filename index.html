@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>form</title>
+</head>
+<body>
+    <form enctype="multipart/form-data" action="http://192.168.88.59:8000/newItem" method="post">
+        <input type="text" name="name">
+        <input type="submit" value="отправить">
+    </form>
+    <div>
+        <button onclick="loadData()">Get</button>
+    </div>
+    <span id="data"></span>
+    <script>
+        let spanEl = document.querySelector('#data');
+        function loadData() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://192.168.88.59:8000/items', true);
+            xhr.send()
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState != 4) return;
+                if (xhr.status != 200) {
+                    // обработать ошибку
+                    alert(xhr.status + ': ' + xhr.statusText);
+                } else {
+                    // вывести результат
+                    spanEl.innerHTML = xhr.responseText;
+                    
+                }
+                spanEl.innerHTML = 'загрузка'
+
+            }
+}
+    </script>
+</body>
+</html>

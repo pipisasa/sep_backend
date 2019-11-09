@@ -1,4 +1,7 @@
 let ObjectID = require('mongodb').ObjectID;
+let multer  =   require('multer');
+
+
 
 module.exports = function(app, db) {
     
@@ -41,17 +44,44 @@ module.exports = function(app, db) {
 
 
     //--------NEW ITEM------------//____json_____
-    app.post('/newItem', (req, res) => {
+    let objqwsa = {
+        filename:''
+    }
+    var storage =   multer.diskStorage({
+        destination: function (req, file, callback) {
+            callback(null, './uploads');
+        },
+        filename: function (req, file, callback) {
+            objqwsa.filename=file.fieldname + '-' + Date.now() + '.jpeg';
+            callback(null, objqwsa.filename);
+        }
+    });
+    let upload = multer({ storage : storage}).fields([
+        {name : 'img', maxCount: 1}
+    ]);
+    app.post('/newItem', upload, (req, res) => {
+        req.body.img = objqwsa.filename;
         db.collection('items').insertOne(req.body, (err, result) => {
             if (err) { 
                 res.send({ 'error': 'An error has occurred' }); 
             } else {
-                res.status(200);
-                res.send('OK')
+                upload(req,res,function(err) {
+                    if ( err ) return res.end("Error uploading file.");
+                    // res.end("File is uploaded");
+                    res.status(200);
+                    res.send('Send to /sendImg your image')
+                });
             }
         });
+        
     });
-    
+
+    app.post('/sendImg',(req,res) => {
+        upload(req,res,function(err) {
+            if ( err ) return res.end("Error uploading file.");
+            res.end("File is uploaded");
+        });
+    });
 
     //------------FIND-ID-----------------//
     app.get('/find-id/:id', async (req, res) => {

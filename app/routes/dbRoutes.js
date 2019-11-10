@@ -1,9 +1,10 @@
 let ObjectID = require('mongodb').ObjectID;
 let multer  =   require('multer');
+let fs = require('fs')
 
 
 
-module.exports = function(app, db) {
+module.exports = function(app, db, dir) {
     
     //-------------GET-ALL-ITEM---------//
     app.get('/items', (req, res)=>{
@@ -17,8 +18,8 @@ module.exports = function(app, db) {
     })
 
     //------------FIND-NAME-------------//
-    app.get('/find/name', async (req, res)=>{
-        const name = req.query.name;
+    app.get('/find/name/:name', async (req, res)=>{
+        const name = req.params.name;
         const details = { name: name};
         db.collection('items').find(details).toArray((err,data) => {
             if (err) { 
@@ -30,8 +31,8 @@ module.exports = function(app, db) {
     })
     
     //------------FIND-CATEGORY-------------//
-    app.get('/find/category', async (req, res)=>{
-        const category = req.query.category;
+    app.get('/find/category/:category', async (req, res)=>{
+        const category = req.params.category;
         const details = { category: category };
         db.collection('items').find(details).toArray((err,data) => {
             if (err) { 
@@ -52,7 +53,7 @@ module.exports = function(app, db) {
             callback(null, './uploads');
         },
         filename: function (req, file, callback) {
-            objqwsa.filename=file.fieldname + '-' + Date.now() + '.jpeg';
+            objqwsa.filename = Date.now() + file.originalname;
             callback(null, objqwsa.filename);
         }
     });
@@ -67,20 +68,11 @@ module.exports = function(app, db) {
             } else {
                 upload(req,res,function(err) {
                     if ( err ) return res.end("Error uploading file.");
-                    // res.end("File is uploaded");
-                    res.status(200);
-                    res.send('Send to /sendImg your image')
+                    res.end("File is uploaded");
                 });
             }
         });
         
-    });
-
-    app.post('/sendImg',(req,res) => {
-        upload(req,res,function(err) {
-            if ( err ) return res.end("Error uploading file.");
-            res.end("File is uploaded");
-        });
     });
 
     //------------FIND-ID-----------------//
@@ -112,9 +104,12 @@ module.exports = function(app, db) {
     });
 
     //------------DELETE-ID--------------//
-    app.delete('/delete/:id', (req, res) => {
+    app.delete('/delete/:id', async (req, res) => {
         const id = req.params.id;
         const details = { "_id": new ObjectID(id) };
+        await db.collection('items').findOne(details, (err, item)=>{
+            fs.unlinkSync(`${dir}/uploads/${item.img}`);
+        })
         db.collection('items').remove(details, (err, item) => {
             if (err) {
                 res.send({'error':'An error has occurred'});

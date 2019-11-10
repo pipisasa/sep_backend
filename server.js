@@ -15,7 +15,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, function(err, database){
     
     let db = database.db('contacts');
     
-    require('./app/routes')(app, db);
+    require('./app/routes')(app, db, __dirname);
     app.listen(port, () => {
       console.log('We are live on ' + port);
     }); 

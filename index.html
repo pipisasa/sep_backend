@@ -8,10 +8,16 @@
 </head>
 <body>
     <form enctype="multipart/form-data" action="http://192.168.88.59:8000/newItem" method="post">
-        <input type="text" name="name">name<br/>
-        <input type="text" name="description">desc<br/>
-        <input type="number" name="price">price<br/>
-        <h3>category</h3>
+        name:<br/>
+        <input type="text" name="name"><br/>
+        desc:<br/>
+        <input type="text" name="description"><br/>
+        price:<br/>
+        <input type="number" name="price"><br/>
+        <h3>options:</h3>
+            <input type="text" name="options"><br/>
+
+        <h3>Category:</h3>
         <input type="radio" name="category" value="SHYRDAK"> Шырдак<br/>
         <input type="radio" name="category" value="SUNDUK">Сундук<br/>
         <input type="radio" name="category" value="POSUDA">Посуда<br/>

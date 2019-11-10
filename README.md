@@ -1,4 +1,8 @@
-#CEP_API_BACKEND
+#SEP_API_BACKEND
+
+
+
+
 
 /categories
     (GET)
@@ -8,11 +12,11 @@
     (GET)
     ------get all items
 
-/find/name?name="ITEM NAME"
+/find/name/:NAME
     (GET)
     ------find items of NAME
 
-/find/category?category="CATEGORY"
+/find/category/:CATEGORY
     (GET)
     ------find items of CATs
 
@@ -39,3 +43,7 @@
 /orders
     (GET)
     ------get all orders
+
+/img/:img
+    (GET)
+    ------get image

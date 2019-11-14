@@ -7,7 +7,7 @@
     <title>form</title>
 </head>
 <body>
-    <form enctype="multipart/form-data" action="http://192.168.88.59:8000/newItem" method="post">
+    <form enctype="multipart/form-data" action="http://localhost:8000/newItem" method="post">
         name:<br/>
         <input type="text" name="name"><br/>
         desc:<br/>
@@ -40,7 +40,7 @@
         let deleteInpt = document.querySelector('#deleteInpt');
         function deleteData(){
             var xhr = new XMLHttpRequest();
-            xhr.open('DELETE', 'http://192.168.88.59:8000/delete/'+deleteInpt.value, true);
+            xhr.open('DELETE', 'http://localhost:8000/delete/'+deleteInpt.value, true);
             xhr.send()
             xhr.onreadystatechange = function() {
                 if (xhr.readyState != 4) return;
@@ -49,7 +49,7 @@
         }
         function loadData() {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'http://192.168.88.59:8000/items', true);
+            xhr.open('GET', 'http://localhost:8000/items', true);
             xhr.send()
             xhr.onreadystatechange = function() {
                 if (xhr.readyState != 4) return;

@@ -43,6 +43,9 @@
 /orders
     (GET)
     ------get all orders
+/deleteOrder/:id
+    (DELETE)
+    ------delete order of id
 
 /img/:img
     (GET)
